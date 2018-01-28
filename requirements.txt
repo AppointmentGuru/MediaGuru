@@ -1,0 +1,11 @@
+falcon
+gunicorn==19.7.1
+pytransloadit
+
+ipdb
+ipython
+
+coverage
+codacy-coverage
+mock
+pytest
