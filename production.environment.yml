@@ -1,4 +1,5 @@
-- key: TRANSLOADIT_KEY
-  value: "{{transloadit_key}}"
-- key: TRANSLOADIT_SECRET
-  value: "{{transloadit_secret}}"
+docker_environment:
+  - key: TRANSLOADIT_KEY
+    value: "{{transloadit_key}}"
+  - key: TRANSLOADIT_SECRET
+    value: "{{transloadit_secret}}"
