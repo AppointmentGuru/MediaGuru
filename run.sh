@@ -1,1 +1,1 @@
-gunicorn app:api -b :8000 --reload
+gunicorn app:api -b :80 --reload

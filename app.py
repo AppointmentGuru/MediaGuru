@@ -43,7 +43,6 @@ class ImageResource:
         url = 'http://api2.transloadit.com/assemblies'
         res = requests.post(url, data=params, files=files)
         print(res.content)
-        import ipdb;ipdb.set_trace()
 
         resp.status = falcon.HTTP_201
         resp.location = '/images/' + name
