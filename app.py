@@ -24,8 +24,8 @@ class ImageResource:
 
         # upload:
         ext = mimetypes.guess_extension(req.content_type)
-        # name = '{uuid}{ext}'.format(uuid=uuid.uuid4(), ext=ext)
-        name = 'mumtaz.png'
+        name = '{uuid}{ext}'.format(uuid=uuid.uuid4(), ext=ext)
+        # name = 'mumtaz.png'
         image_path = os.path.join(self._storage_path, name)
 
         with io.open(image_path, 'wb') as image_file:
