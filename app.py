@@ -1,5 +1,6 @@
-import falcon, os, io, uuid, mimetypes, requests
+import falcon, os, io, uuid, mimetypes, requests, json
 from backends.transloadit import get_params
+from falcon_multipart.middleware import MultipartMiddleware
 
 class ImageResource:
 
@@ -23,31 +24,33 @@ class ImageResource:
     def on_post(self, req, resp):
 
         # upload:
-        ext = mimetypes.guess_extension(req.content_type)
-        name = '{uuid}{ext}'.format(uuid=uuid.uuid4(), ext=ext)
-        # name = 'mumtaz.png'
-        image_path = os.path.join(self._storage_path, name)
-
-        with io.open(image_path, 'wb') as image_file:
-            while True:
-                chunk = req.stream.read(self._CHUNK_SIZE_BYTES)
-                if not chunk:
-                    break
-
-                image_file.write(chunk)
+        # title = req.get_param('title')
+        image = req.get_param('file')
+        name = req.get_param('name')
+        practitioner = req.get_param('practitioner')
+        # Read image as binary
+        raw = image.file.read()
+        # Retrieve filename
+        # filename = image.filename
+        filename = '{}-{}'.format(practitioner, name)
 
         # trasnload:
-        files = {'file': open(image_path, 'rb')}
+        files = {}
+        files[filename] = raw
         data = {'template_id': '828c7570618411e7ba10e5947cea0feb'}
         params = get_params(data)
         url = 'http://api2.transloadit.com/assemblies'
         res = requests.post(url, data=params, files=files)
-        print(res.content)
+
+        data = json.loads(res.content)
+        img_data = data.get('uploads')[0]
+        width = img_data.get('meta', {}).get('width')
 
         resp.status = falcon.HTTP_201
-        resp.location = '/images/' + name
-
-
+        resp.location = 'practitioner/logo/{}_{}-logo.png'.format(width, practitioner)
 
 api = falcon.API()
+# middleware:
+api = falcon.API(middleware=[MultipartMiddleware()])
+# api
 api.add_route('/image', ImageResource())

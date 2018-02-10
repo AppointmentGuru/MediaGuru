@@ -1,6 +1,6 @@
 falcon
+falcon-multipart
 gunicorn==19.7.1
-pytransloadit
 
 ipdb
 ipython
